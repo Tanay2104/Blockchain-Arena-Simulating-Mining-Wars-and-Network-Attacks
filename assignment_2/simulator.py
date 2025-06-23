@@ -4,7 +4,7 @@ from network import Network
 from containers import Event, Block, Transaction
 
 class Simulator():
-    def __init__(self, n, z_0, z_1, Ttx, inter_arrival_time = 600, intitial_wallet_balance = 100, max_coins_per_transaction=200):
+    def __init__(self, n, z_0, z_1, Ttx, inter_arrival_time = 100, intitial_wallet_balance = 100, max_coins_per_transaction=200):
         self.event_queue = []
         heapq.heapify(self.event_queue)
 
@@ -40,7 +40,10 @@ class Simulator():
             heapq.heappush(self.event_queue, mining_event)
 
     def run(self, runtime):
+        i = 0
         while self.event_queue and self.current_time < runtime:
+            if i%10000 == 0: 
+                print(f"Iteration {i} running... Time: {self.current_time}")
             event = heapq.heappop(self.event_queue)
             self.current_time = event.timestamp
 
@@ -57,6 +60,7 @@ class Simulator():
                 message = event.data['message']
                 sender_id = event.data['sender_id']
                 self.handle_receive_message(reciever=peer, message=message, sender_id=sender_id)
+            i+=1
 
     def handle_generate_transaction(self, peer):
         number_of_coins = np.random.randint(1, self.max_coins_per_transaction)
@@ -94,7 +98,7 @@ class Simulator():
                 return
             else:
                 reciever.known_txn_ids.add(message.txn_ID)
-                txn_messages = reciever.propagate_transaction(current_time=self.current_time, txn=message, sender_id=sender_id)
+                txn_messages = reciever.propagate_transaction(current_time=self.current_time, txn=message, sender_ID=sender_id)
                 for gossip in txn_messages:
                     heapq.heappush(self.event_queue, gossip)
 

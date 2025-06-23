@@ -18,8 +18,11 @@ class BlockchainTree():
                 while current_block_ID != self.genesis_block.block_ID:
                     current_block_ID = self.tree_data[current_block_ID].prev_block_ID
                     childless_block_chain_lengths[block]+=1
-        
+
+        if not childless_block_chain_lengths:
+            return self.genesis_block, 1
         return max(childless_block_chain_lengths, key=childless_block_chain_lengths.get), max(childless_block_chain_lengths.values())
+       
 
     def calculate_balance(self, peer_ID, chain_end_block_ID):
         current_block_ID = chain_end_block_ID
