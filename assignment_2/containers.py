@@ -14,6 +14,7 @@ class Transaction():
         self.sender_ID = sender_ID
         self.reciever_ID = reciever_ID
         self.amount = amount
+        self.transaction_size_kb = 1
 
 class Block():
     def __init__(self, block_ID, prev_block_ID, miner_ID, timestamp, transactions=None):
@@ -23,7 +24,7 @@ class Block():
         self.miner_ID = miner_ID
         self.timestamp = timestamp
         self.transactions = transactions
-        self.size = 1 + len(transactions)
+        self.size = 1+len(transactions)
 
     def get_net_transaction(self, peer_ID):
         balance = 0
