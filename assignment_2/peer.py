@@ -38,12 +38,12 @@ class Peer():
     def propagate_block(self, block, current_time, sender_id):
 
         if not self.validate_block(block):
-            return [], False
+            return []
                 
-        _, old_length = self.blockchain_tree.get_longest_chain()
+        #old_block, old_length = self.blockchain_tree.get_longest_chain()
 
         self.blockchain_tree.add_block(block)
-        _, new_length = self.blockchain_tree.get_longest_chain()
+        #new_block, new_length = self.blockchain_tree.get_longest_chain()
 
         block_messages = []
         for neighbour in self.network.network.neighbors(self):
@@ -52,8 +52,7 @@ class Peer():
                 block_message = Event(timestamp = current_time + latency_ij, type = 'RECEIVE_MESSAGE', target_peer_ID= neighbour.ID, data = {'message': block, 'sender_id': self.ID})
                 block_messages.append(block_message)
         
-        return block_messages, new_length > old_length
-    
+        return block_messages
     def validate_block(self, block):
         
         if block.prev_block_ID not in self.blockchain_tree.tree_data:
@@ -122,7 +121,8 @@ class Peer():
 
         propagation_delay_ij = self.network.network[self][neighbour]['p_delay']
         
-        latency_ij = propagation_delay_ij + message_length / c_ij_bps + d_ij
+        #latency_ij = propagation_delay_ij + message_length / c_ij_bps + d_ij
+        latency_ij = 0.001
         return latency_ij
     
     def start_mining(self, current_time, I):
@@ -135,21 +135,24 @@ class Peer():
 
     def attempt_to_finalise_block(self, number_of_transactions, number_of_blocks, current_time):
 
-        current_longest_chain_tip, _ = self.blockchain_tree.get_longest_chain()
+        #current_longest_chain_tip, _ = self.blockchain_tree.get_longest_chain()
 
-        if current_longest_chain_tip.block_ID != self.current_mining_parent.block_ID:
-            return []
+        # if current_longest_chain_tip.block_ID != self.current_mining_parent.block_ID:
+        #     return []
         
         block_messages = []
         
         n_max_transactions = min(999, len(self.pending_transactions))
         if n_max_transactions==0:
             mining_fee_txn = Transaction(txn_ID=number_of_transactions+1, sender_ID=None, reciever_ID=self.ID, amount=50)
-            new_block = Block(block_ID=number_of_blocks+1, prev_block_ID=current_longest_chain_tip.block_ID, miner_ID=self.ID, timestamp=current_time, transactions=[mining_fee_txn])
+            new_block = Block(block_ID=number_of_blocks+1, prev_block_ID=self.current_mining_parent.block_ID, miner_ID=self.ID, timestamp=current_time, transactions=[mining_fee_txn])
             for neighbour in self.network.network.neighbors(self):
                 latency_ij = self.calculate_latency(neighbour, message_size_kb=1)
                 block_message = Event(timestamp = current_time + latency_ij, type = 'RECEIVE_MESSAGE', target_peer_ID = neighbour.ID, data = {'message': new_block, 'sender_id': self.ID})
                 block_messages.append(block_message)
+            self_message = Event(timestamp=current_time, type='RECEIVE_MESSAGE', target_peer_ID=self.ID, data={'message': new_block, 'sender_id': self.ID})
+            block_messages.append(self_message)
+
             return block_messages
         
         n_transactions = np.random.randint(0, n_max_transactions+1)
@@ -160,14 +163,17 @@ class Peer():
         mining_fee_txn = Transaction(txn_ID=number_of_transactions+1, sender_ID=None, reciever_ID=self.ID, amount=50)
         transactions_in_block.append(mining_fee_txn)
      
-        new_block = Block(block_ID=number_of_blocks+1, prev_block_ID=current_longest_chain_tip.block_ID, miner_ID=self.ID, timestamp=current_time, transactions=transactions_in_block)
+        new_block = Block(block_ID=number_of_blocks+1, prev_block_ID=self.current_mining_parent.block_ID, miner_ID=self.ID, timestamp=current_time, transactions=transactions_in_block)
 
-        self.blockchain_tree.add_block(new_block)
+        #self.blockchain_tree.add_block(new_block)
 
       
         for neighbour in self.network.network.neighbors(self):
             latency_ij = self.calculate_latency(neighbour, message_size_kb=new_block.size)
             block_message = Event(timestamp = current_time + latency_ij, type = 'RECEIVE_MESSAGE', target_peer_ID= neighbour.ID, data = {'message': new_block, 'sender_id': self.ID})
             block_messages.append(block_message)
+
+        self_message = Event(timestamp=current_time, type='RECEIVE_MESSAGE', target_peer_ID=self.ID, data={'message': new_block, 'sender_id': self.ID})
+        block_messages.append(self_message)
         
         return block_messages

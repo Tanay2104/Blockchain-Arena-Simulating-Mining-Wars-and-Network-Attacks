@@ -43,7 +43,7 @@ class Simulator():
         i = 0
         while self.event_queue and self.current_time < runtime:
             if i%10000 == 0: 
-                print(f"Iteration {i} running... Time: {self.current_time}")
+                print(f"Iteration {i} running... Time: {self.current_time:.2f}")
             event = heapq.heappop(self.event_queue)
             self.current_time = event.timestamp
 
@@ -107,14 +107,11 @@ class Simulator():
                 return
             else:
                 reciever.known_block_ids.add(message.block_ID)
-                block_messages, new_mining = reciever.propagate_block(block=message, current_time=self.current_time, sender_id=sender_id)
+                block_messages= reciever.propagate_block(block=message, current_time=self.current_time, sender_id=sender_id)
                 if block_messages:
                     for gossip in block_messages:
                         heapq.heappush(self.event_queue, gossip)
 
-                if new_mining:
-                    next_mining_event = reciever.start_mining(self.current_time, self.I)
-                    heapq.heappush(self.event_queue, next_mining_event)
-                    
-
-        
+             
+                next_mining_event = reciever.start_mining(self.current_time, self.I)
+                heapq.heappush(self.event_queue, next_mining_event)
