@@ -4,11 +4,11 @@ from visualise import *
 
 if __name__ == '__main__':
     number_of_peers = 20
-    low_speed_fraction = 0.6
-    low_cpu_fraction = 0.1
+    low_speed_fraction = 0.5
+    low_cpu_fraction = 0.9
     transaction_frequency = 1
-    interarrival_time = 20
-    runtime = 500
+    interarrival_time = 50
+    runtime = 1500
     sim = Simulator(n=number_of_peers, z_0=low_speed_fraction, z_1=low_cpu_fraction, 
                     Ttx=transaction_frequency, inter_arrival_time = interarrival_time)
     sim.run(runtime=runtime)

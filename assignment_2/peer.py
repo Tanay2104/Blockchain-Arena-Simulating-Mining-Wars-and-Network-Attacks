@@ -121,8 +121,8 @@ class Peer():
 
         propagation_delay_ij = self.network.network[self][neighbour]['p_delay']
         
-        #latency_ij = propagation_delay_ij + message_length / c_ij_bps + d_ij
-        latency_ij = 0.001
+        latency_ij = propagation_delay_ij + message_length / c_ij_bps + d_ij
+        #latency_ij = 0.001
         return latency_ij
     
     def start_mining(self, current_time, I):

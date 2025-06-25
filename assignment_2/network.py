@@ -13,7 +13,7 @@ class Network:
         high_hashing_power = 10*low_hashing_power
 
         from peer import Peer
-
+        
         for i in range(n):
             peer = Peer(ID=i,genesis_block=genesis_block, is_slow=(np.random.random() < z_0_slow),
                         is_low_CPU=(np.random.random() < z_1_low_CPU), hashing_powers=(low_hashing_power, high_hashing_power), network=self)

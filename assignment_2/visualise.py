@@ -36,24 +36,13 @@ def visualise_blockchain_tree(blockchain_tree, filename='blockchain_tree', title
 
 
 def visualise_wealth_distribution(final_tree, all_peers, filename='wealth_distribution.png', title=''):
-    """
-    Calculates and plots the final coin balance of each peer in a bar chart.
-
-    Args:
-        final_tree (BlockchainTree): The blockchain tree from a peer with the most blocks.
-        all_peers (dict): The dictionary of all peer objects from the simulator's network.
-        filename (str): The name of the file to save the plot to.
-        title (str): The title for the plot.
-    """
     print("Generating wealth distribution plot...")
     
     peer_ids = []
     balances = []
 
-    # We must calculate balances based on the single, canonical longest chain
     longest_chain_tip, _ = final_tree.get_longest_chain()
     
-    # Sort peers by ID for a clean bar chart
     sorted_peers = sorted(all_peers.values(), key=lambda p: p.ID)
 
     for peer in sorted_peers:
@@ -81,25 +70,13 @@ def visualise_wealth_distribution(final_tree, all_peers, filename='wealth_distri
     plt.tight_layout()
     
     plt.savefig(filename)
-    plt.close() # Close the plot to free memory
-    print(f"Wealth distribution visualization saved to {filename}")
+    plt.close()
+    print(f"Wealth distribution visualization saved as {filename}")
 
 
 def visualise_miner_efficiency(final_tree, all_peers, filename='miner_efficiency.png', title=''):
-    """
-    Calculates and plots the mining efficiency of each peer.
-
-    Efficiency = (Blocks Mined on Longest Chain) / (Total Blocks Mined by Peer)
-
-    Args:
-        final_tree (BlockchainTree): The blockchain tree from a peer with the most blocks.
-        all_peers (dict): The dictionary of all peer objects from the simulator's network.
-        filename (str): The name of the file to save the plot to.
-        title (str): The title for the plot.
-    """
     print("Generating miner efficiency plot...")
 
-    # Step 1: Get the set of all block IDs on the longest chain for fast lookups
     longest_chain_tip, _ = final_tree.get_longest_chain()
     longest_chain_ids = set()
     current_block = longest_chain_tip
@@ -109,7 +86,6 @@ def visualise_miner_efficiency(final_tree, all_peers, filename='miner_efficiency
             break
         current_block = final_tree.tree_data.get(current_block.prev_block_ID)
 
-    # Step 2: Initialize stats for every peer
     miner_stats = {}
     for peer_id, peer in all_peers.items():
         miner_stats[peer_id] = {
@@ -120,14 +96,12 @@ def visualise_miner_efficiency(final_tree, all_peers, filename='miner_efficiency
             'is_slow': peer.is_slow
         }
     
-    # Step 3: Iterate through ALL blocks in the tree to count totals
     for block in final_tree.tree_data.values():
         if block.miner_ID is not None:
             miner_stats[block.miner_ID]['total_mined'] += 1
             if block.block_ID in longest_chain_ids:
                 miner_stats[block.miner_ID]['on_chain'] += 1
 
-    # Step 4: Prepare data for plotting by calculating efficiency and categorizing peers
     categories = {
         'High CPU / Fast Link': {'ids': [], 'on_chain': [], 'total': []},
         'High CPU / Slow Link': {'ids': [], 'on_chain': [], 'total': []},
@@ -139,7 +113,6 @@ def visualise_miner_efficiency(final_tree, all_peers, filename='miner_efficiency
         if stats['total_mined'] > 0:
             stats['efficiency'] = stats['on_chain'] / stats['total_mined']
         
-        # Categorize the peer
         if not stats['is_low_cpu'] and not stats['is_slow']:
             cat = 'High CPU / Fast Link'
         elif not stats['is_low_cpu'] and stats['is_slow']:
@@ -153,12 +126,11 @@ def visualise_miner_efficiency(final_tree, all_peers, filename='miner_efficiency
         categories[cat]['on_chain'].append(stats['on_chain'])
         categories[cat]['total'].append(stats['total_mined'])
 
-    # Step 5: Create the plot
     plt.figure(figsize=(14, 8))
     
     n_categories = len(categories)
     bar_width = 0.35
-    index = np.arange(len(all_peers)) # A numeric index for all peers
+    index = np.arange(len(all_peers))
 
     peer_id_map = {peer_id: i for i, peer_id in enumerate(sorted(all_peers.keys()))}
     
@@ -170,7 +142,6 @@ def visualise_miner_efficiency(final_tree, all_peers, filename='miner_efficiency
         
         cat_indices = [peer_id_map[pid] for pid in data['ids']]
         
-        # Stacked bar chart: stale blocks on bottom, on-chain blocks on top
         stale_blocks = [total - on_chain for total, on_chain in zip(data['total'], data['on_chain'])]
 
         plt.bar(cat_indices, stale_blocks, bar_width, color=colors['stale'], label='Stale Blocks' if 'stale' not in plotted_total else "")
