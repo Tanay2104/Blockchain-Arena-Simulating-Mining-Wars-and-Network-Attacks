@@ -1,0 +1,150 @@
+/* General Body & Font Styling */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.6;
+}
+
+header {
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+    margin-bottom: 2em;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 1em;
+}
+
+h1 {
+    color: #0d1b2a;
+    font-weight: 600;
+}
+
+h2 {
+    color: #1b263b;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5em;
+    margin-top: 1.5em;
+}
+
+/* Button Styling */
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+#refresh_button {
+    background-color: #6c757d;
+    margin-bottom: 1em;
+}
+
+#refresh_button:hover {
+    background-color: #5a6268;
+}
+
+/* Form & Input Styling */
+.form_group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+input[type="text"] {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    flex-grow: 1;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Main DApp Interface Sections */
+#dapp_interface {
+    width: 100%;
+    max-width: 800px;
+    background-color: #ffffff;
+    padding: 2em;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+section {
+    margin-bottom: 2em;
+}
+
+/* Item & History List Styling */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#item_list li, #provenance_history li {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#item_list li:hover {
+    background-color: #e9ecef;
+}
+
+/* Add a separate style for the transfer form inside a list item */
+#item_list li .transfer-form {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #ccc;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#provenance_history li {
+    cursor: default;
+    background-color: #fff;
+    border-left: 4px solid #007bff;
+}
+
+/* Loading/Empty Messages */
+#empty_history_msg, #loading_items_msg {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    padding: 1em;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* Utility Class */
+.hidden {
+    display: none;
+}
