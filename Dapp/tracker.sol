@@ -1,4 +1,4 @@
-pragma solidity >=0.4.16 <0.9.0;
+pragma solidity  ^0.8.20;
 
 contract SimpleStorage {
     struct Item {

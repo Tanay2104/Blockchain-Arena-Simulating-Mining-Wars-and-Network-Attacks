@@ -30,7 +30,7 @@ def visualise_blockchain_tree(blockchain_tree, filename='blockchain_tree', title
     try:
         dot.graph_attr['label'] = f'{title}\n'
         dot.render(filename, view=False, cleanup=True)
-        print(f"Blockchain tree visualization saved to {filename}.png")
+        print(f"Blockchain tree visualization saved to {filename}.png") 
     except graphviz.backend.execute.ExecutableNotFound:
         print("Graphviz executable not found. Please install Graphviz and ensure it's in your system's PATH.")
 
