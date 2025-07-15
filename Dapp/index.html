@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>On-Chain Provenance Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>On-Chain Provenance Tracker</h1>
+    </header>
+    <button id="connect_wallet_button">Connect Wallet</button>
+    <div id="dapp_interface" class="hidden">
+        
+        <section>
+            <h2>Register New Item</h2>
+            <div class="form_group">
+                <input type="text" id="item_name_input" placeholder="Item Name">
+                <input type="text" id="item_data_input" placeholder="Item Data">
+                <button id="register_item_button">Register</button>
+            </div>
+        </section>
+
+        <section>
+            <h2>All Registered Items</h2>
+            <button id="refresh_button">Refresh</button>
+            <p id="empty_history_msg">You currently have no registered items</p> 
+            <p id="loading_items_msg" class = "hidden">Please wait. Loading your items from the blockchain.</p>
+            <ul id="item_list">
+            </ul>
+        </section>
+
+        <section id="history_section" class="hidden">
+            <h2>Provenance History for Item #<span id="history_item_id"></span></h2>
+            <ul id="provenance_history">
+            </ul>
+        </section>
+        
+    </div>
+
+<!-- Replace your old script tag with this one -->
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script src="script.js" defer></script>
+    
+</body>
+</html>
