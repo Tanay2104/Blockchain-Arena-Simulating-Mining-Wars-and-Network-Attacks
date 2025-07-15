@@ -24,4 +24,10 @@ contract SimpleStorage {
         items[id].owner = newOwner;
         emit OwnershipTransferred(id, orig_owner, newOwner);
     }
+    function burnItem(uint256 _id) public {
+    require(msg.sender == items[_id].owner, "Only the current owner can burn this item.");
+    address originalOwner = items[_id].owner;
+    items[_id].owner = address(0);
+    emit OwnershipTransferred(_id, originalOwner, address(0));
+}
 }
